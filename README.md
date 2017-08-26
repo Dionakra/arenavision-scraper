@@ -16,17 +16,23 @@ $ npm install
 ```
 
 ## Available methods
-### getGuide()
-It scrapes de *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page.
+### getGuide([proxy])
+It scrapes de *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page. It supports a proxy url to perform the request. It helps on countries where Arenavision is banned, like Spain. 
 
 #### Example
 ``` js
 var { getGuide } = require('arenavision-scraper');
-getGuide()
-.then((result) => {
+
+getGuide().then((result) => {
   console.log(result);
-}) 
-.catch((error) => {
+}).catch((error) => {
+  console.log(error)
+});
+
+// Proxy 
+getGuide('http://212.109.219.81:8888').then((result) => {
+  console.log(result);
+}).catch((error) => {
   console.log(error)
 });
 ```
@@ -58,17 +64,23 @@ This returns:
 ```
 
 
-### getChannels()
-It recovers the channels and its acestream links. That is done because these links are not static, they change sometimes, so you may have to recover these links
+### getChannels([proxy])
+It recovers the channels and its acestream links. That is done because these links are not static, they change sometimes, so you may have to recover these links. It supports a proxy url to perform the request. It helps on countries where Arenavision is banned, like Spain. 
 
 #### Example
 ``` js
 var { getChannels } = require('arenavision-scraper');
-getChannels()
-.then((result) => {
+
+getChannels().then((result) => {
   console.log(result);
-}) 
-.catch((error) => {
+}).catch((error) => {
+  console.log(error)
+});
+
+// Proxy 
+getChannels('http://212.109.219.81:8888').then((result) => {
+  console.log(result);
+}).catch((error) => {
   console.log(error)
 });
 ```
