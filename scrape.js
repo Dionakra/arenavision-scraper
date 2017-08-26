@@ -2,12 +2,12 @@ var { load } = require('cheerio');
 var { each } = require('lodash');
 var { urlArenaVision, urlGuide, selectors, prop, r } = require('./params');
 
-// Obtener los canales y sus URLs de ArenaVision
-exports.getChannels = function(){
+exports.getChannels = function(proxy=null){
   var channelList = [];
+  var request = r(proxy);
 
   return new Promise(function (resolve, reject) {
-    r.get(urlArenaVision, async function(error, response, html){
+    request.get(urlArenaVision, async function(error, response, html){
         if(!error){
           var $ = load(html);
           var channels = $(selectors.channels);
@@ -25,26 +25,11 @@ exports.getChannels = function(){
   });
 }
 
-// Por el canal, obtener el link
-function getArenaVisionLink(number, url){
+exports.getGuide = function (proxy=null){
+  var request = r(proxy);
+  
   return new Promise(function (resolve, reject) {
-    r.get(url, function(error, response, html){
-      if(!error){
-        var $ = load(html);
-        var link = $(selectors.acestream);
-        resolve({[number]: link[0].attribs.href});
-      } else {
-        reject(error);
-        console.log();
-      }
-    });
-  });
-}
-
-// Obtener la guía con los canales
-exports.getGuide = function (){
-  return new Promise(function (resolve, reject) {
-    r.get(urlGuide, async function(error, response, html){
+    request.get(urlGuide, async function(error, response, html){
       if(!error){
         var $ = load(html);
         var events = $(selectors.events).closest("tr");
@@ -55,6 +40,22 @@ exports.getGuide = function (){
           eventsInfo.push(getData(info));
         })
         resolve(eventsInfo);
+      } else {
+        reject(error);
+      }
+    });
+  });
+}
+
+
+/////////////////////////////////////////////////////////////
+function getArenaVisionLink(number, url){
+  return new Promise(function (resolve, reject) {
+    request.get(url, function(error, response, html){
+      if(!error){
+        var $ = load(html);
+        var link = $(selectors.acestream);
+        resolve({[number]: link[0].attribs.href});
       } else {
         reject(error);
       }
