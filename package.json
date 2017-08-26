@@ -2,13 +2,12 @@
   "name": "arenavision-scraper",
   "version": "1.0.0",
   "description": "A simple library to scrape ArenaVision.ru events",
-  "main": "index.js",
+  "main": "scrape.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dionakra/arenavision-scraper.git"
   },
   "scripts": {
-    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -26,7 +25,6 @@
   "homepage": "https://github.com/Dionakra/arenavision-scraper#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.1.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0"
   }
