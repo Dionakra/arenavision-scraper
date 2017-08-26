@@ -13,7 +13,7 @@ exports.getChannels = function(proxy=null){
           var channels = $(selectors.channels);
 
           for(i=0;i<channels.length;i++){
-            var channel = await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href);
+            var channel = await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href, proxy);
             channelList.push(channel);
           }
 
@@ -27,7 +27,7 @@ exports.getChannels = function(proxy=null){
 
 exports.getGuide = function (proxy=null){
   var request = r(proxy);
-  
+
   return new Promise(function (resolve, reject) {
     request.get(urlGuide, async function(error, response, html){
       if(!error){
@@ -49,7 +49,9 @@ exports.getGuide = function (proxy=null){
 
 
 /////////////////////////////////////////////////////////////
-function getArenaVisionLink(number, url){
+function getArenaVisionLink(number, url, proxy){
+  var request = r(proxy);
+
   return new Promise(function (resolve, reject) {
     request.get(url, function(error, response, html){
       if(!error){
