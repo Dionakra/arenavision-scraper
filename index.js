@@ -4,18 +4,19 @@ var { each } = require('lodash');
 var { urlArenaVision, urlGuide, headers, selectors, prop, timeout } = require('./params');
 
 var channelList = []
-var r = request.defaults({headers: headers, timeout: timeout})
+var r = request.defaults({headers: headers, timeout: timeout, proxy: 'http://78.24.41.100:8081'})
 
 // Obtener los canales y sus URLs de ArenaVision
 function getChannels(){
-  r.get(getOptions(urlArenaVision), function(error, response, html){
+  r.get(getOptions(urlArenaVision), async function(error, response, html){
       if(!error){
         var $ = cheerio.load(html);
         var channels = $(selectors.channels);
 
         for(i=0;i<channels.length;i++){
-          getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href);
+          await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href);
         }
+        console.log(channelList);
       } else {
         console.log(error);
       }
@@ -24,20 +25,22 @@ function getChannels(){
 
 // Por el canal, obtener el link
 function getArenaVisionLink(number, url){
-  r.get(getOptions(url), function(error, response, html){
-    if(!error){
-      var $ = cheerio.load(html);
-      var link = $(selectors.acestream);
-      channelList[number] = link[0].attribs.href;
-    } else {
-      console.log(error);
-    }
+  return new Promise(function (resolve, reject) {
+    r.get(getOptions(url), function(error, response, html){
+      if(!error){
+        var $ = cheerio.load(html);
+        var link = $(selectors.acestream);
+        channelList[number] = link[0].attribs.href;
+      } else {
+        console.log(error);
+      }
+    });
   });
 }
 
 // Obtener la guía con los canales
 function getGuide(channels){
-  r.get(getOptions(urlGuide), function(error, response, html){
+  r.get(getOptions(urlGuide), async function(error, response, html){
     if(!error){
       var $ = cheerio.load(html);
       var events = $(selectors.events).closest("tr");
@@ -103,4 +106,4 @@ function getOptions(url){
     url: url
   }
 }
-getGuide();
+getChannels();
