@@ -31,9 +31,7 @@ exports.getGuide = function (proxy=null){
   return new Promise(async function (resolve, reject) {
     var urlGuide = await getGuideLink(proxy);
 
-    console.log(urlGuide);
-
-    request.get(urlGuide, function(error, response, html){
+    request.get(urlArenaVision + urlGuide, function(error, response, html){
       if(!error){
         var $ = load(html);
         var events = $(selectors.events).closest("tr");
@@ -61,7 +59,6 @@ function getGuideLink(proxy){
       if(!error){
         var $ = load(html);
         var link = $(selectors.guide);
-        console.log(html);
         resolve(link[0].attribs.href);
       } else {
         reject(error);
