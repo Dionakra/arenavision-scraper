@@ -1,6 +1,6 @@
 var { load } = require('cheerio');
 var { each } = require('lodash');
-var { urlArenaVision, urlGuide, selectors, prop, r } = require('./params');
+var { urlArenaVision, selectors, prop, r } = require('./params');
 
 exports.getChannels = function(proxy=null){
   var channelList = [];
@@ -28,8 +28,12 @@ exports.getChannels = function(proxy=null){
 exports.getGuide = function (proxy=null){
   var request = r(proxy);
 
-  return new Promise(function (resolve, reject) {
-    request.get(urlGuide, async function(error, response, html){
+  return new Promise(async function (resolve, reject) {
+    var urlGuide = await getGuideLink(proxy);
+
+    console.log(urlGuide);
+
+    request.get(urlGuide, function(error, response, html){
       if(!error){
         var $ = load(html);
         var events = $(selectors.events).closest("tr");
@@ -49,6 +53,24 @@ exports.getGuide = function (proxy=null){
 
 
 /////////////////////////////////////////////////////////////
+function getGuideLink(proxy){
+  var request = r(proxy);
+
+  return new Promise(function (resolve, reject) {
+    request.get(urlArenaVision, function(error, response, html){
+      if(!error){
+        var $ = load(html);
+        var link = $(selectors.guide);
+        console.log(html);
+        resolve(link[0].attribs.href);
+      } else {
+        reject(error);
+      }
+    });
+  })
+}
+
+
 function getArenaVisionLink(number, url, proxy){
   var request = r(proxy);
 

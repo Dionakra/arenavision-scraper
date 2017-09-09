@@ -7,15 +7,16 @@ const headers = {
   'Referer':'http://www.arenavision.ru/',
   'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36'
 };
+
 const timeout = 120000;
 
 module.exports = {
   urlArenaVision: 'http://www.arenavision.ru',
-  urlGuide: 'http://arenavision.ru/guide',
   selectors: {
     channels: 'ul.menu > li.expanded > ul.menu > li > a',
     acestream: 'p.auto-style1 > a[target=_blank]',
-    events: 'tbody > tr > td.auto-style3'
+    events: 'tbody > tr > td.auto-style3',
+    guide: 'ul.menu > li[class=leaf] > a'
   },
   prop: {
     day: 0,
@@ -26,6 +27,6 @@ module.exports = {
     channels: 5
   },
   r: function(proxy=null){
-    return request.defaults({headers: headers, timeout: timeout, proxy: proxy});
+    return request.defaults({jar: true, headers: headers, timeout: timeout, proxy: proxy});
   }
 }
