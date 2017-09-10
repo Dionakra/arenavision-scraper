@@ -3,6 +3,8 @@
 # Arenavision Scraper
 Scrapes Arenavision.ru in order to get the events displayed on the guide and obtaining the acestream links.
 
+__09/09/2017 log__ Arenavision has implemented CloudFlare, and it wants you to fill in the captcha. If the library isn't working for you, just download the source code, put some _console.log(html)_ somewhere and you will find out what is happening.
+
 ## Installation (NPM)
 ``` bash
 $ npm install --save arenavision-scraper
