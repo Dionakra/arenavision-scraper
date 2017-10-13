@@ -42,26 +42,30 @@ getGuide('http://212.109.219.81:8888').then((result) => {
 This returns:
 
 ```
-[{
-  day: '26/08/2017',
-  time: '10:00 CEST',
-  sport: 'MOTOGP',
-  competition: 'BRITISH GP',
-  event: 'MOTO3 FREE PRACTICE 3',
-  channels: {
-      '12': 'ENG'
-  }
- },
- {
-  day: '26/08/2017',
-  time: '10:55 CEST',
-  sport: 'MOTOGP',
-  competition: 'BRITISH GP',
-  event: 'MOTOGP FREE PRACTICE 3',
-  channels: {
-      '12': 'ENG'
-  }
- }
+[  
+   {  
+      day:'13/10/2017',
+      time:'16:30 CEST',
+      sport:'SOCCER',
+      competition:'FIFA WORLD CUP SUB - 17',
+      event:'SPAIN - NORTH KOREA',
+      channels:{  
+         '8':'SPA',
+         '9':'SPA'
+      }
+   },
+   {  
+      day:'13/10/2017',
+      time:'19:00 CEST',
+      sport:'BASKETBALL',
+      competition:'EUROLEAGUE',
+      event:'BC KHIMKI - VALENCIA BASKET',
+      channels:{  
+         '15':'SPA',
+         '16':'SPA'
+      }
+   },
+....
 ]
 ```
 
@@ -90,11 +94,19 @@ getChannels('http://212.109.219.81:8888').then((result) => {
 This returns:
 
 ```
-[{'1': 'acestream://b6041d93d129acd512e87a603655753adf8546db'},
- {'2': 'acestream://b6041d93d129acd512e87a603655753adf8546db'},
- {'3': 'acestream://b6b533c39b614bacfb062471d05434c25f0348a0'},
- {'4': 'acestream://b6b533c39b614bacfb062471d05434c25f0348a0'},
- {'5': 'acestream://bdaf954deb611ac70ab70372526fc55fa3aec17d'}]
+[ <1 empty item>,
+  'acestream://bbda24210d7937932965369c248f7ccdfc2a023f',
+  'acestream://bbda24210d7937932965369c248f7ccdfc2a023f',
+  'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d',
+  'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d',
+  'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a',
+  'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a',
+  'acestream://f252caa464bbdf311e8fa4b016508531ad92df2c',
+  'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7',
+  'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7',
+  'acestream://d6409da7a77f7c7baee5038d73d828a5695e3bde',
+  'acestream://d6409da7a77f7c7baee5038d73d828a5695e3bde',
+....]
 ```
 
 ## Built With
