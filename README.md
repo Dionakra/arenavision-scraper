@@ -94,18 +94,16 @@ getChannels('http://212.109.219.81:8888').then((result) => {
 This returns:
 
 ```
-[ <1 empty item>,
-  'acestream://bbda24210d7937932965369c248f7ccdfc2a023f',
-  'acestream://bbda24210d7937932965369c248f7ccdfc2a023f',
-  'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d',
-  'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d',
-  'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a',
-  'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a',
-  'acestream://f252caa464bbdf311e8fa4b016508531ad92df2c',
-  'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7',
-  'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7',
-  'acestream://d6409da7a77f7c7baee5038d73d828a5695e3bde',
-  'acestream://d6409da7a77f7c7baee5038d73d828a5695e3bde',
+[ { '1': 'acestream://bbda24210d7937932965369c248f7ccdfc2a023f' },
+  { '2': 'acestream://bbda24210d7937932965369c248f7ccdfc2a023f' },
+  { '3': 'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d' },
+  { '4': 'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d' },
+  { '5': 'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a' },
+  { '6': 'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a' },
+  { '7': 'acestream://f252caa464bbdf311e8fa4b016508531ad92df2c' },
+  { '8': 'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7' },
+  { '9': 'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7' },
+
 ....]
 ```
 
