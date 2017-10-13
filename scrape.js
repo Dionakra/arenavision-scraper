@@ -14,9 +14,9 @@ exports.getChannels = function(proxy=null){
 
           for(i=0;i<channels.length;i++){
             var channel = await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href, proxy);
-            channelList[i+1] = channel;
+	    channelList.push({[i+1]: channel});
           }
-
+	
           resolve(channelList);
         } else {
           reject(error);
