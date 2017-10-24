@@ -16,7 +16,7 @@ exports.getChannels = function(proxy=null){
             var channel = await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href, proxy);
 	    channelList.push({[i+1]: channel});
           }
-	
+
           resolve(channelList);
         } else {
           reject(error);
@@ -114,12 +114,14 @@ function cleanChannels(dataChannel){
   each(dataChannel.children, function(text) {
     if(text.data && text.data.trim() != ""){
       var rip = text.data.split("[");
-      var lang = rip[1].replace("]", "");
-      var channelsRip = rip[0].trim().split("-")
+      if(rip.length >= 2){
+        var lang = rip[1].replace("]", "");
+        var channelsRip = rip[0].trim().split("-")
 
-      each(channelsRip, function(channel){
-        channels[channel] = lang;
-      });
+        each(channelsRip, function(channel){
+          channels[channel] = lang;
+        });
+      }
     }
   })
 
