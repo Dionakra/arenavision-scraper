@@ -15,7 +15,7 @@ module.exports = {
   selectors: {
     channels: 'ul.menu > li.expanded > ul.menu > li > a',
     acestream: 'p.auto-style1 > a[target=_blank]',
-    events: 'tbody > tr > td.auto-style3',
+    events: 'tbody > tr > td.auto-style13',
     guide: 'ul.menu > li[class=leaf] > a'
   },
   prop: {
