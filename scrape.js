@@ -1,42 +1,38 @@
-var { load } = require('cheerio');
-var { each } = require('lodash');
-var { urlArenaVision, selectors, prop, r, urlRegex } = require('./params');
+const { load } = require('cheerio');
+const { each } = require('lodash');
+const axios = require('axios');
+const { urlArenaVision, selectors, prop, urlRegex } = require('./params');
 
 exports.getChannels = function(proxy=null){
   var channelList = [];
-  var request = r(proxy);
 
-  return new Promise(function (resolve, reject) {
-    request.get(urlArenaVision, async function(error, response, html){
-        if(!error){
-          var $ = load(html);
-          var channels = $(selectors.channels);
+  return new Promise((resolve, reject) => {
+    axios.get(urlArenaVision)
+      .then(async response => {
+        var $ = load(response.data);
+        var channels = $(selectors.channels);
 
-          for(i=0;i<channels.length;i++){
-            const linkUrl = channels[i].attribs.href;
-            const url = linkUrl.match(urlRegex) ? linkUrl : urlArenaVision + linkUrl;
-            var channel = await getArenaVisionLink(i+1, url, proxy);
-	           channelList.push({[i+1]: channel});
-          }
+        for(i=0;i<channels.length;i++){
+          const linkUrl = channels[i].attribs.href;
+          const url = linkUrl.match(urlRegex) ? linkUrl : urlArenaVision + linkUrl;
 
-          resolve(channelList);
-        } else {
-          reject(error);
+          var channel = await getArenaVisionLink(i+1, url, proxy);
+          channelList.push({[i+1]: channel});
         }
-    });
+
+        resolve(channelList);
+      }).catch(error => reject(error));
   });
 }
 
 exports.getGuide = function (proxy=null){
-  var request = r(proxy);
-
-  return new Promise(async function (resolve, reject) {
+  return new Promise(async (resolve, reject)  => {
     var urlGuide = await getGuideLink(proxy);
     const url = urlGuide.match(urlRegex) ? urlGuide : urlArenaVision + urlGuide;
 
-    request.get(url, function(error, response, html){
-      if(!error){
-        var $ = load(html);
+    axios.get(url)
+      .then(response => {
+        var $ = load(response.data);
         var events = $(selectors.events).closest("tr");
         var eventsInfo = [];
 
@@ -45,49 +41,36 @@ exports.getGuide = function (proxy=null){
           eventsInfo.push(getData(info));
         })
         resolve(eventsInfo);
-      } else {
-        reject(error);
-      }
-    });
+      }).catch(error => reject(error));
   });
 }
 
 
 /////////////////////////////////////////////////////////////
 function getGuideLink(proxy){
-  var request = r(proxy);
-
-  return new Promise(function (resolve, reject) {
-    request.get(urlArenaVision, function(error, response, html){
-      if(!error){
-        var $ = load(html);
+  return new Promise((resolve, reject) => {
+    axios.get(urlArenaVision)
+      .then(response => {
+        var $ = load(response.data);
         var link = $(selectors.guide);
         resolve(link[0].attribs.href);
-      } else {
-        reject(error);
-      }
-    });
+      }).catch(error => reject(error));
   })
 }
 
 function getArenaVisionLink(number, url, proxy){
-  var request = r(proxy);
-
   return new Promise(function (resolve, reject) {
-    request.get(url, function(error, response, html){
-      if(!error){
-        var $ = load(html);
+    axios.get(url)
+      .then(response => {
+        var $ = load(response.data);
         var link = $(selectors.acestream);
         resolve(link[0].attribs.href);
-      } else {
-        reject(error);
-      }
-    });
+      }).catch(error => reject(error));
   });
 }
 
 function getData(info){
-  data = {};
+  const data = {};
   data.day = cleanData(info[prop.day]);
   data.time = cleanData(info[prop.time]);
   data.sport = cleanData(info[prop.sport]);
@@ -99,7 +82,7 @@ function getData(info){
 }
 
 function cleanData(data){
-  var text = "";
+  let text = "";
 
   each(data.children, function(innerText) {
     if(innerText.data){
@@ -111,14 +94,14 @@ function cleanData(data){
 }
 
 function cleanChannels(dataChannel){
-  var channels = {};
+  const channels = {};
 
   each(dataChannel.children, function(text) {
     if(text.data && text.data.trim() != ""){
-      var rip = text.data.split("[");
+      const rip = text.data.split("[");
       if(rip.length >= 2){
-        var lang = rip[1].replace("]", "");
-        var channelsRip = rip[0].trim().split("-")
+        const lang = rip[1].replace("]", "");
+        const channelsRip = rip[0].trim().split("-")
 
         each(channelsRip, function(channel){
           channels[channel] = lang;
