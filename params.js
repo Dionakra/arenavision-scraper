@@ -28,5 +28,6 @@ module.exports = {
   },
   r: function(proxy=null){
     return request.defaults({jar: true, headers: headers, timeout: timeout, proxy: proxy});
-  }
+  },
+  urlRegex: /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
 }

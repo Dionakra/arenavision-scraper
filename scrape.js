@@ -1,6 +1,6 @@
 var { load } = require('cheerio');
 var { each } = require('lodash');
-var { urlArenaVision, selectors, prop, r } = require('./params');
+var { urlArenaVision, selectors, prop, r, urlRegex } = require('./params');
 
 exports.getChannels = function(proxy=null){
   var channelList = [];
@@ -13,8 +13,10 @@ exports.getChannels = function(proxy=null){
           var channels = $(selectors.channels);
 
           for(i=0;i<channels.length;i++){
-            var channel = await getArenaVisionLink(i+1, urlArenaVision + channels[i].attribs.href, proxy);
-	    channelList.push({[i+1]: channel});
+            const linkUrl = channels[i].attribs.href;
+            const url = linkUrl.match(urlRegex) ? linkUrl : urlArenaVision + linkUrl;
+            var channel = await getArenaVisionLink(i+1, url, proxy);
+	           channelList.push({[i+1]: channel});
           }
 
           resolve(channelList);
@@ -30,8 +32,9 @@ exports.getGuide = function (proxy=null){
 
   return new Promise(async function (resolve, reject) {
     var urlGuide = await getGuideLink(proxy);
+    const url = urlGuide.match(urlRegex) ? urlGuide : urlArenaVision + urlGuide;
 
-    request.get(urlArenaVision + urlGuide, function(error, response, html){
+    request.get(url, function(error, response, html){
       if(!error){
         var $ = load(html);
         var events = $(selectors.events).closest("tr");
@@ -66,7 +69,6 @@ function getGuideLink(proxy){
     });
   })
 }
-
 
 function getArenaVisionLink(number, url, proxy){
   var request = r(proxy);
