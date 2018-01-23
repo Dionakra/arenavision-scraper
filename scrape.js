@@ -2,12 +2,14 @@ const { load } = require('cheerio');
 const { each } = require('lodash');
 const axios = require('axios');
 const { urlArenaVision, selectors, prop, urlRegex } = require('./params');
+const opts = { headers: { Cookie:  'beget=begetok'+'; expires='+new Date().toGMTString()+'; path=/' } }
+
 
 exports.getChannels = function(proxy=null){
   var channelList = [];
 
   return new Promise((resolve, reject) => {
-    axios.get(urlArenaVision)
+    axios.get(urlArenaVision, opts)
       .then(async response => {
         var $ = load(response.data);
         var channels = $(selectors.channels);
@@ -30,7 +32,7 @@ exports.getGuide = function (proxy=null){
     var urlGuide = await getGuideLink(proxy);
     const url = urlGuide.match(urlRegex) ? urlGuide : urlArenaVision + urlGuide;
 
-    axios.get(url)
+    axios.get(url, opts)
       .then(response => {
         var $ = load(response.data);
         var events = $(selectors.events).closest("tr");
@@ -49,7 +51,7 @@ exports.getGuide = function (proxy=null){
 /////////////////////////////////////////////////////////////
 function getGuideLink(proxy){
   return new Promise((resolve, reject) => {
-    axios.get(urlArenaVision)
+    axios.get(urlArenaVision, opts)
       .then(response => {
         var $ = load(response.data);
         var link = $(selectors.guide);
@@ -60,7 +62,7 @@ function getGuideLink(proxy){
 
 function getArenaVisionLink(number, url, proxy){
   return new Promise(function (resolve, reject) {
-    axios.get(url)
+    axios.get(url, opts)
       .then(response => {
         var $ = load(response.data);
         var link = $(selectors.acestream);
