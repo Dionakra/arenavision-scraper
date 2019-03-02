@@ -18,8 +18,12 @@ exports.getChannels = function(proxy=null){
           const linkUrl = channels[i].attribs.href;
           const url = linkUrl.match(urlRegex) ? linkUrl : urlArenaVision + linkUrl;
 
-          var channel = await getArenaVisionLink(i+1, url, proxy);
-          channelList.push({[i+1]: channel});
+          try {
+            const channel = await getArenaVisionLink(i+1, url, proxy);
+            channelList.push({[i+1]: channel});
+          } catch(ex) {
+	    console.debug(`This URL couldn't be requested: ${url}`);
+          }
         }
 
         resolve(channelList);
