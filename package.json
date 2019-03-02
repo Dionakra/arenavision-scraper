@@ -1,6 +1,6 @@
 {
   "name": "arenavision-scraper",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A simple library to scrape ArenaVision.ru events",
   "main": "scrape.js",
   "repository": {
