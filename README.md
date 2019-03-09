@@ -62,7 +62,7 @@ getGuide().then(console.log);
 
 
 ### getChannels()
-It recovers the channels and its acestream links. That is done because these links are not static, they change sometimes, so you may have to recover these links.
+It recovers the channels and its acestream links. That is done because these links are not static, they change sometimes, so you may have to recover these links. It also provides the tinyurl for Acestream.
 
 #### Example
 ``` js
@@ -74,11 +74,17 @@ getChannels().then(console.log);
 [
   {
     "channel": "1",
-    "url": "acestream://bbda24210d7937932965369c248f7ccdfc2a023f"
+    "url": {
+      "acestream": "acestream://93e33b8239023c1ce9106596dc7e9aaa5494f2c2",
+      "tinyurl": "http://tinyurl.com/y2ffn77s"
+    }
   },
   {
     "channel": "2",
-    "url": "acestream://bbda24210d7937932965369c248f7ccdfc2a023f"
+    "url": {
+      "acestream": "acestream://93e33b8239023c1ce9106596dc7e9aaa5494f2c2",
+      "tinyurl": "http://tinyurl.com/y2ffn77s"
+    }
   },
   ....
 ]
@@ -96,32 +102,30 @@ getFullGuide().then(console.log);
 [
   {
     "day": "09/03/2019",
-    "time": "17:00 CET",
+    "time": "20:45 CET",
     "sport": "SOCCER",
-    "competition": "FRANCE LIGUE 1",
-    "event": "STRASBOURG - OLYMPIQUE LYON",
+    "competition": "SPANISH LA LIGA",
+    "event": "GETAFE - HUESCA",
     "channels": [
       {
-        "channel": "21",
-        "lang": "FRE",
-        "url": "acestream://d0e26383bee973abb96d59fb5557d43af9173dd0"
-      }
-    ]
-  },
-  {
-    "day": "09/03/2019",
-    "time": "17:45 CET",
-    "sport": "RUGBY",
-    "competition": "6 NATIONS",
-    "event": "ENGLAND - ITALY",
-    "channels": [
-      {
-        "channel": "15",
+        "channel": "1",
         "lang": "SPA",
-        "url": "acestream://e17daf17d71b941f82230cdc358c4ba02eed520a"
+        "url": {
+          "acestream": "acestream://93e33b8239023c1ce9106596dc7e9aaa5494f2c2",
+          "tinyurl": "http://tinyurl.com/y2ffn77s"
+        }
+      },
+      {
+        "channel": "23",
+        "lang": "ENG",
+        "url": {
+          "acestream": "acestream://f5455a6bab5f6542d0880bc596d20dd13eba13d3",
+          "tinyurl": "http://tinyurl.com/ybn8gnoo"
+        }
       }
     ]
-  },
+  }
+],
   ....
 ]
 ```
