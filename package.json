@@ -15,10 +15,6 @@
     "arenavision",
     "scraping"
   ],
-  "files": [
-    "/src",
-    "./index.js"
-  ],
   "author": "David de los Santos Boix",
   "license": "GPL-3.0",
   "bugs": {
