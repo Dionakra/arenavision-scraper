@@ -1,9 +1,9 @@
 <p align="center"><a href="https://nodei.co/npm/arenavision-scraper/"><img src="https://nodei.co/npm/arenavision-scraper.png"></a></p>
 
-# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
+# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper) [![Coverage Status](https://coveralls.io/repos/github/Dionakra/arenavision-scraper/badge.svg?branch=master)](https://coveralls.io/github/Dionakra/arenavision-scraper?branch=master)
 Scrapes Arenavision.ru in order to get the events displayed on the guide and obtaining the acestream links.
 
-__09/09/2017 log__ Arenavision has implemented CloudFlare, and it wants you to fill in the captcha. If the library isn't working for you, just download the source code, put some _console.log(html)_ somewhere and you will find out what is happening.
+__Version 1.0.15 changes__ I have changed the entire object returned by the methods, added one more that encapsulates the other two, added CI with Travis, tests and coverage results. The returned object is slightly different but much better. Therefore, the README has the 1.0.15 docs. To see previous docs, just go through the README git history.
 
 ## Installation (NPM)
 ``` bash
@@ -17,47 +17,45 @@ $ cd arenavision-scraper
 $ npm install
 ```
 
-## Available methods
+## Available methods (v 1.0.15+)
 ### getGuide()
 It scrapes de *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page.
 
 #### Example
 ``` js
-var { getGuide } = require('arenavision-scraper');
+const { getGuide } = require('arenavision-scraper');
 
-getGuide().then((result) => {
-  console.log(result);
-}).catch((error) => {
-  console.log(error)
-});
+getGuide().then(console.log);
 ```
-
-This returns:
-
 ```
-[  
-   {  
-      day:'13/10/2017',
-      time:'16:30 CEST',
-      sport:'SOCCER',
-      competition:'FIFA WORLD CUP SUB - 17',
-      event:'SPAIN - NORTH KOREA',
-      channels:{  
-         '8':'SPA',
-         '9':'SPA'
+[
+  {
+    "day": "09/03/2019",
+    "time": "17:00 CET",
+    "sport": "SOCCER",
+    "competition": "FRANCE LIGUE 1",
+    "event": "STRASBOURG - OLYMPIQUE LYON",
+    "channels": [
+      {
+        "channel": "21",
+        "lang": "FRE",
       }
-   },
-   {  
-      day:'13/10/2017',
-      time:'19:00 CEST',
-      sport:'BASKETBALL',
-      competition:'EUROLEAGUE',
-      event:'BC KHIMKI - VALENCIA BASKET',
-      channels:{  
-         '15':'SPA',
-         '16':'SPA'
+    ]
+  },
+  {
+    "day": "09/03/2019",
+    "time": "17:45 CET",
+    "sport": "RUGBY",
+    "competition": "6 NATIONS",
+    "event": "ENGLAND - ITALY",
+    "channels": [
+      {
+        "channel": "15",
+        "lang": "SPA"
       }
-   },
+    ]
+  }
+]
 ....
 ]
 ```
@@ -68,29 +66,64 @@ It recovers the channels and its acestream links. That is done because these lin
 
 #### Example
 ``` js
-var { getChannels } = require('arenavision-scraper');
+const { getChannels } = require('arenavision-scraper');
 
-getChannels().then((result) => {
-  console.log(result);
-}).catch((error) => {
-  console.log(error)
-});
+getChannels().then(console.log);
+```
+```
+[
+  {
+    "channel": "1",
+    "url": "acestream://bbda24210d7937932965369c248f7ccdfc2a023f"
+  },
+  {
+    "channel": "2",
+    "url": "acestream://bbda24210d7937932965369c248f7ccdfc2a023f"
+  },
+  ....
+]
 ```
 
-This returns:
+### getFullGuide()
+Mix the previous methods in one just to get all the information with just one method.
 
+#### Example
+```js
+const { getFullGuide } = require('arenavision-scraper');
+getFullGuide().then(console.log);
 ```
-[ { '1': 'acestream://bbda24210d7937932965369c248f7ccdfc2a023f' },
-  { '2': 'acestream://bbda24210d7937932965369c248f7ccdfc2a023f' },
-  { '3': 'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d' },
-  { '4': 'acestream://56d3a01f6e5e74eb2cb5840556d80a52adf2871d' },
-  { '5': 'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a' },
-  { '6': 'acestream://9ed0bb4cc44b2f5c7b99c9ce609916ccf931f16a' },
-  { '7': 'acestream://f252caa464bbdf311e8fa4b016508531ad92df2c' },
-  { '8': 'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7' },
-  { '9': 'acestream://e5cb58e5b82976076316606ef71e92e97ce863d7' },
-
-....]
+```
+[
+  {
+    "day": "09/03/2019",
+    "time": "17:00 CET",
+    "sport": "SOCCER",
+    "competition": "FRANCE LIGUE 1",
+    "event": "STRASBOURG - OLYMPIQUE LYON",
+    "channels": [
+      {
+        "channel": "21",
+        "lang": "FRE",
+        "url": "acestream://d0e26383bee973abb96d59fb5557d43af9173dd0"
+      }
+    ]
+  },
+  {
+    "day": "09/03/2019",
+    "time": "17:45 CET",
+    "sport": "RUGBY",
+    "competition": "6 NATIONS",
+    "event": "ENGLAND - ITALY",
+    "channels": [
+      {
+        "channel": "15",
+        "lang": "SPA",
+        "url": "acestream://e17daf17d71b941f82230cdc358c4ba02eed520a"
+      }
+    ]
+  },
+  ....
+]
 ```
 
 ## Built With
