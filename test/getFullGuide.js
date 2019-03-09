@@ -1,4 +1,4 @@
-const getFullGuide = require("../src/getFullGuide").default;
+const getFullGuide = require("../index").getFullGuide;
 
 describe("arenavision-scraper | getFullGuide", () => {
   it("should return the whole guide", (done) => {

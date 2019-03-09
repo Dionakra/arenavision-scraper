@@ -1,6 +1,6 @@
-import getGuide from "./src/getGuide";
-import getChannels from "./src/getChannels";
-import getFullGuide from "./src/getFullGuide";
+const getGuide =  require("./src/getGuide").default;
+const getChannels = require("./src/getChannels").default;
+const getFullGuide = require( "./src/getFullGuide").default;
 
 module.exports = {
   getGuide,
