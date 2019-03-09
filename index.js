@@ -1,10 +1,9 @@
-const {getGuide, getChannels} = require('./scrape.js');
+import getGuide from "./src/getGuide";
+import getChannels from "./src/getChannels";
+import getFullGuide from "./src/getFullGuide";
 
-
-getGuide().then((data) => {
-  console.log(data);
-});
-
-getChannels().then((data) => {
-  console.log(data);
-});
+module.exports = {
+  getGuide,
+  getChannels,
+  getFullGuide
+};
