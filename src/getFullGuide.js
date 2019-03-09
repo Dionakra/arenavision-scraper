@@ -10,19 +10,19 @@ async function getFullGuide() {
       let eventUrls = []
       const eventChannels = flatMap(event.channels, channel => {
         const channelInfo = getAcestreamURL(channel.channel, channels)
+        let res = []
 
         if(channelInfo){
           const acestreamURL = channelInfo.url.acestream
         
           if(!eventUrls.includes(acestreamURL)){
-            channel.url = channelInfo.url
             eventUrls = eventUrls.concat(acestreamURL)
-            return channel
-          } else {
-            return []
+            channel.url = channelInfo.url
+            res = channel
           }
         }
         
+        return res
       })
       event.channels = eventChannels
       return event
