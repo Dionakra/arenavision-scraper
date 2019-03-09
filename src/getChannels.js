@@ -1,5 +1,6 @@
 const load = require("cheerio").load;
 const axios = require("axios");
+const shorten = require('tinyurl').shorten;
 const { urlArenaVision, selectors, urlRegex, axiosOpts } = require("./params");
 
 /**
@@ -32,18 +33,21 @@ function getChannels() {
  * @param {Number} index 
  */
 async function getChannelsAcestreamLinks(channel) {
-	const channelNo = channel.children[0].data.split(" ")[1]
 	return new Promise(async (resolve, reject) => {
-		const url = getChannelPageLink(channel);
+		const channelNo = channel.children[0].data.split(" ")[1]; // Nimber of the channel extracted from the HTML
+		const channelPage = getChannelPageLink(channel);
 
 		try {
-			const acestream = await getAcestreamLink(url);
+			const acestream = await getAcestreamLink(channelPage);
+			const tinyurl = await tinyfy(acestream);
 			resolve([{
 				channel: channelNo, 
-				url: acestream
+				url: {
+					acestream,
+					tinyurl
+				}
 			}]);
 		} catch (ex) {
-			//console.debug(`This URL couldn't be requested: ${url}`);
 			resolve(undefined);
 		}
 	});
@@ -74,6 +78,19 @@ function getAcestreamLink(url) {
         resolve(link[0].attribs.href);
       })
       .catch(error => reject(error));
+  });
+}
+
+/**
+ * Makes an URL tiny
+ * @param {String} url URL to tinyfy
+ * @returns The same URL but with tinyfy
+ */
+function tinyfy(url){
+  return new Promise(function (resolve, reject) {
+    shorten(url, (res) => {
+      resolve(res);
+    })
   });
 }
 

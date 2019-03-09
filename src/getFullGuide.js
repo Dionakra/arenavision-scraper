@@ -12,11 +12,11 @@ async function getFullGuide() {
         const channelInfo = getAcestreamURL(channel.channel, channels)
 
         if(channelInfo){
-          const url = channelInfo.url
+          const acestreamURL = channelInfo.url.acestream
         
-          if(!eventUrls.includes(url)){
-            channel.url = url
-            eventUrls = eventUrls.concat(url)
+          if(!eventUrls.includes(acestreamURL)){
+            channel.url = channelInfo.url
+            eventUrls = eventUrls.concat(acestreamURL)
             return channel
           } else {
             return []
