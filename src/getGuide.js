@@ -8,7 +8,7 @@ const { urlArenaVision, selectors, prop, urlRegex, axiosOpts } = require("./para
  */
 function getGuide() {
   return new Promise(async (resolve, reject) => {
-    const url = await getGuideLink(proxy);
+    const url = await getGuideLink();
 
     axios.get(url, axiosOpts)
       .then(response => {
