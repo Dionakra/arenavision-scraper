@@ -14,12 +14,11 @@ function getChannels() {
 
 				let channelList = []
 				for(let i = 0; i< channels.length; i++){
-					const channelInfo = await getChannelsAcestreamLinks(channels[i], i);
+					const channelInfo = await getChannelsAcestreamLinks(channels[i]);
 
 					if(channelInfo) {
 						channelList = channelList.concat(channelInfo)
 					}
-
 				}
         resolve(channelList);
       })
@@ -32,14 +31,15 @@ function getChannels() {
  * @param {Object} channel 
  * @param {Number} index 
  */
-async function getChannelsAcestreamLinks(channel, index) {
+async function getChannelsAcestreamLinks(channel) {
+	const channelNo = channel.children[0].data.split(" ")[1]
 	return new Promise(async (resolve, reject) => {
 		const url = getChannelPageLink(channel);
 
 		try {
 			const acestream = await getAcestreamLink(url);
 			resolve([{
-				channel: index + 1, // Channels start at 1, not 0 like Arrays
+				channel: channelNo, 
 				url: acestream
 			}]);
 		} catch (ex) {
