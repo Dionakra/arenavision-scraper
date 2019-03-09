@@ -1,6 +1,6 @@
 <p align="center"><a href="https://nodei.co/npm/arenavision-scraper/"><img src="https://nodei.co/npm/arenavision-scraper.png"></a></p>
 
-# Arenavision Scraper
+# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
 Scrapes Arenavision.ru in order to get the events displayed on the guide and obtaining the acestream links.
 
 __09/09/2017 log__ Arenavision has implemented CloudFlare, and it wants you to fill in the captcha. If the library isn't working for you, just download the source code, put some _console.log(html)_ somewhere and you will find out what is happening.
