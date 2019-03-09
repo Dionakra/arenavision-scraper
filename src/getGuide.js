@@ -94,7 +94,7 @@ function cleanChannels(dataChannel) {
       const channelsRip = rip[0].trim().split("-");
 
       channelsRip.forEach(channel => {
-        channels = channels.concat({ number: channel, lang: lang })
+        channels = channels.concat({ channel, lang })
       })
     })
 
