@@ -1,7 +1,7 @@
 const load = require("cheerio").load;
 const axios = require("axios")
 const {filter, each} = require("lodash")
-const { urlArenaVision, selectors, prop, urlRegex, axiosOpts } = require("./params");
+const { urlArenaVision, selectors, prop, axiosOpts, regex } = require("./params");
 
 /**
  * Obtains the guide at Arenavision.ru available at the moment in an JSON friendly format
@@ -40,7 +40,7 @@ function getGuideLink() {
 
         // Sometimes the link is relative. If so, fill it with the base url
         const link = linkObj[0].attribs.href;
-        const url = link.match(urlRegex) ? link : urlArenaVision + link;
+        const url = link.match(regex.url) ? link : urlArenaVision + link;
 
         resolve(url);
       })
