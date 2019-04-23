@@ -1,7 +1,7 @@
 const load = require("cheerio").load;
 const axios = require("axios");
 const shorten = require('tinyurl').shorten;
-const { urlArenaVision, selectors, urlRegex, axiosOpts } = require("./params");
+const { urlArenaVision, selectors, axiosOpts, regex } = require("./params");
 
 /**
  * Obtains all the channels and their acestream links
@@ -62,7 +62,7 @@ async function getChannelsAcestreamLinks(channel) {
  */
 function getChannelPageLink(channel){
 	const url = channel.attribs.href;
-	return url.match(urlRegex) ? url : urlArenaVision + url;
+	return url.match(regex.url) ? url : urlArenaVision + url;
 }
 
 /**
@@ -73,9 +73,19 @@ function getAcestreamLink(url) {
   return new Promise((resolve, reject) => {
     axios.get(url, axiosOpts)
       .then(response => {
-        const $ = load(response.data);
-				const link = $(selectors.acestream);
-        resolve(link[0].attribs.href);
+				let res = "";
+
+				let match = regex.usual.exec(response.data);
+				if(match.length > 0){
+					res = match[1]
+				} else {
+					match = regex.alt.exec(response.data);
+					if(match.length > 0){
+						res = match[1]
+					}
+				}
+
+        resolve(`acestream://${res}`);
       })
       .catch(error => reject(error));
   });
