@@ -76,11 +76,11 @@ function getAcestreamLink(url) {
 				let res = "";
 
 				let match = regex.usual.exec(response.data);
-				if(match.length > 0){
+				if(match[1] !== undefined && match[1] !== ""){
 					res = match[1]
 				} else {
 					match = regex.alt.exec(response.data);
-					if(match.length > 0){
+					if(match[1] !== undefined > 0){
 						res = match[1]
 					}
 				}
