@@ -7,8 +7,8 @@ module.exports = {
   },
   regex: {
     url: /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-    usual:  /acestream:\/\/(.*?)\"/gm,
-    alt: /\.m3u8\?id=(.*?)"/gm
+    usual:  /acestream:\/\/(.*?)\"/,
+    alt: /\.m3u8\?id=(.*?)"/
   },
   prop: {
     day: 0,

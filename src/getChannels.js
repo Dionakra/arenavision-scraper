@@ -76,18 +76,20 @@ function getAcestreamLink(url) {
 				let res = "";
 
 				let match = regex.usual.exec(response.data);
-				if(match[1] !== undefined && match[1] !== ""){
+				if(match != null && match[1] !== undefined && match[1] !== ""){
 					res = match[1]
 				} else {
 					match = regex.alt.exec(response.data);
-					if(match[1] !== undefined > 0){
+					if(match != null && match[1] !== undefined && match[1] !== ""){
 						res = match[1]
 					}
 				}
 
         resolve(`acestream://${res}`);
       })
-      .catch(error => reject(error));
+      .catch(error => {
+				reject(error)
+			});
   });
 }
 

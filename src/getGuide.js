@@ -84,11 +84,10 @@ function cleanChannels(dataChannel) {
   let channels = [];
 
   filter(dataChannel.children, text => {
-      const notEmpty = text.data && text.data.trim() != "";
-      return notEmpty && text.data.split("[").length > 1;
+      return text.data && text.data.trim() != "" && text.data.includes("[");
     })
     .forEach(text => {
-      const str = text.data.replace("\r","").replace("\n", "");
+      const str = text.data.replace("\r","").replace("\n", "").trim();
       const rip = str.split("[");
       const lang = rip[1].replace("]", "");
       const channelsRip = rip[0].trim().split("-");
