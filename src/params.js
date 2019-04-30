@@ -2,7 +2,7 @@ module.exports = {
   urlArenaVision: "http://www.arenavision.us",
   selectors: {
     channels: "ul.menu > li.expanded > ul.menu > li > a",
-    events: "tbody > tr > td.auto-style13",
+    events: "tr",
     guide: "ul.menu > li[class=leaf] > a",
   },
   regex: {

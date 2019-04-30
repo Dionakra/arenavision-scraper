@@ -34,7 +34,7 @@ function getChannels() {
  */
 async function getChannelsAcestreamLinks(channel) {
 	return new Promise(async (resolve, reject) => {
-		const channelNo = channel.children[0].data.split(" ")[1]; // Nimber of the channel extracted from the HTML
+		const channelNo = channel.children[0].data.split(" ")[1]; // Number of the channel extracted from the HTML
 		const channelPage = getChannelPageLink(channel);
 
 		try {

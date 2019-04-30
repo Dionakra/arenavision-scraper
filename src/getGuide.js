@@ -1,6 +1,6 @@
 const load = require("cheerio").load;
 const axios = require("axios")
-const {filter, each} = require("lodash")
+const {filter} = require("lodash")
 const { urlArenaVision, selectors, prop, axiosOpts, regex } = require("./params");
 
 /**
@@ -13,13 +13,17 @@ function getGuide() {
     axios.get(url, axiosOpts)
       .then(response => {
         const $ = load(response.data);
-        const events = $(selectors.events).closest("tr");
         const eventsInfo = [];
 
-        each(events, event => {
-          const info = $(event).find("td");
-          eventsInfo.push(getData(info));
-        })
+        $("table").find("tr").each(function(i, elem) {
+          const info = $(this).find("td");
+          const data = getData(info);
+
+          if(data.event && data.event != ""){
+            eventsInfo.push(getData(info));  
+          }
+          
+        });
         resolve(eventsInfo);
       })
       .catch(error => reject(error));
@@ -54,6 +58,7 @@ function getGuideLink() {
  */
 function getData(info) {
   const data = {};
+
   data.day = cleanData(info[prop.day]);
   data.time = cleanData(info[prop.time]);
   data.sport = cleanData(info[prop.sport]);
@@ -69,11 +74,15 @@ function getData(info) {
  * @param {Object} data Data to be cleaned
  */
 function cleanData(data) {
-  const text = [...data.children]
-      .filter(innerText => innerText.data)
-      .reduce((prev, next) => prev + " " + next.data, "")
+  if(data){
+    const text = [...data.children]
+    .filter(innerText => innerText.data)
+    .reduce((prev, next) => prev + " " + next.data, "")
 
-  return text.replace("-", " - ").replace("\n", "").replace("\r", "").trim();
+    return text.replace("-", " - ").replace("\n", "").replace("\r", "").trim();
+  } else {
+    return "";
+  }
 }
 
 /**
@@ -81,6 +90,9 @@ function cleanData(data) {
  * @param {Object} dataChannel Object with the cell where the channels info are stored
  */
 function cleanChannels(dataChannel) {
+  if(!dataChannel) 
+    return []
+
   let channels = [];
 
   filter(dataChannel.children, text => {
