@@ -19,7 +19,7 @@ $ npm install
 
 ## Available methods (v 1.0.15+)
 ### getGuide()
-It scrapes de *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page.
+It scrapes the *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page.
 
 #### Example
 ``` js
