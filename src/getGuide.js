@@ -19,7 +19,7 @@ function getGuide() {
           const info = $(this).find("td");
           const data = getData(info);
 
-          if(data.event && data.event != ""){
+          if(data.channels && data.channels.length > 0){
             eventsInfo.push(getData(info));  
           }
           
