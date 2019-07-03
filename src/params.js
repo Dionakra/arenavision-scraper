@@ -1,5 +1,5 @@
 module.exports = {
-  urlArenaVision: "http://www.arenavision.us",
+  urlArenaVision: "http://www.arenavision.biz",
   selectors: {
     channels: "ul.menu > li.expanded > ul.menu > li > a",
     events: "tr",
