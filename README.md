@@ -3,6 +3,9 @@
 # Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper) [![Coverage Status](https://coveralls.io/repos/github/Dionakra/arenavision-scraper/badge.svg?branch=master)](https://coveralls.io/github/Dionakra/arenavision-scraper?branch=master)
 Scrapes Arenavision.ru in order to get the events displayed on the guide and obtaining the acestream links.
 
+__ALERT__
+Version 1.0.24 points to www.arenavision.biz, and version 1.0.23 points to www.arenavision.us. If one of them doesn't work, try the other one. I will add in the version 1.0.25 all the possibilities and it will try with every domain.
+
 __Version 1.0.15 changes__ I have changed the entire object returned by the methods, added one more that encapsulates the other two, added CI with Travis, tests and coverage results. The returned object is slightly different but much better. Therefore, the README has the 1.0.15 docs. To see previous docs, just go through the README git history.
 
 ## Installation (NPM)
