@@ -1,7 +1,7 @@
 const load = require("cheerio").load;
-const axios = require("axios")
+const fetch = require("node-fetch")
 const {filter} = require("lodash")
-const { urlArenaVision, selectors, prop, axiosOpts, regex } = require("./params");
+const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
 
 /**
  * Obtains the guide at Arenavision.ru available at the moment in an JSON friendly format
@@ -10,7 +10,7 @@ function getGuide() {
   return new Promise(async (resolve, reject) => {
     const url = await getGuideLink();
 
-    axios.get(url, axiosOpts)
+    getch(url, fetchOpts)
       .then(response => {
         const $ = load(response.data);
         const eventsInfo = [];
@@ -37,7 +37,7 @@ function getGuide() {
  */
 function getGuideLink() {
   return new Promise((resolve, reject) => {
-    axios.get(urlArenaVision, axiosOpts)
+    fetch(urlArenaVision, fetchOpts)
       .then(response => {
         const $ = load(response.data);
         const linkObj = $(selectors.guide);

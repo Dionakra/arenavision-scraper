@@ -1,14 +1,14 @@
 const load = require("cheerio").load;
-const axios = require("axios");
+const fetch = require("node-fetch");
 const shorten = require('tinyurl').shorten;
-const { urlArenaVision, selectors, axiosOpts, regex } = require("./params");
+const { urlArenaVision, selectors, fetchOpts, regex } = require("./params");
 
 /**
  * Obtains all the channels and their acestream links
  */
 function getChannels() {
   return new Promise((resolve, reject) => {
-    axios.get(urlArenaVision, axiosOpts)
+    fetch(urlArenaVision, fetchOpts)
       .then(async response => {
         const $ = load(response.data);
 				const channels = $(selectors.channels);
@@ -71,7 +71,7 @@ function getChannelPageLink(channel){
  */
 function getAcestreamLink(url) {
   return new Promise((resolve, reject) => {
-    axios.get(url, axiosOpts)
+    fetch(url, fetchOpts)
       .then(response => {
 				let res = "";
 

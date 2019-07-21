@@ -18,10 +18,5 @@ module.exports = {
     event: 4,
     channels: 5
   },
-  axiosOpts: {
-    headers: {
-      Cookie:
-        "beget=begetok" + "; expires=" + new Date().toGMTString() + "; path=/"
-    }
-  }
+  fetchOpts: {"credentials":"include","headers":{"accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3","accept-language":"es","cache-control":"no-cache","pragma":"no-cache","upgrade-insecure-requests":"1"},"referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET"}
 };

@@ -25,6 +25,7 @@
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "lodash": "^4.17.11",
+    "node-fetch": "^2.6.0",
     "tinyurl": "^1.1.2"
   },
   "devDependencies": {
