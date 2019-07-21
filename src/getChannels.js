@@ -9,18 +9,19 @@ const { urlArenaVision, selectors, fetchOpts, regex } = require("./params");
 function getChannels() {
   return new Promise((resolve, reject) => {
     fetch(urlArenaVision, fetchOpts)
-      .then(async response => {
-        const $ = load(response.data);
-				const channels = $(selectors.channels);
+      .then(res => res.text())
+      .then(async data => {
+        const $ = load(data);
+        const channels = $(selectors.channels);
 
-				let channelList = []
-				for(let i = 0; i< channels.length; i++){
-					const channelInfo = await getChannelsAcestreamLinks(channels[i]);
+        let channelList = []
+        for (let i = 0; i < channels.length; i++) {
+          const channelInfo = await getChannelsAcestreamLinks(channels[i]);
 
-					if(channelInfo) {
-						channelList = channelList.concat(channelInfo)
-					}
-				}
+          if (channelInfo) {
+            channelList = channelList.concat(channelInfo)
+          }
+        }
         resolve(channelList);
       })
       .catch(error => reject(error));
@@ -33,25 +34,25 @@ function getChannels() {
  * @param {Number} index 
  */
 async function getChannelsAcestreamLinks(channel) {
-	return new Promise(async (resolve, reject) => {
-		const channelNo = channel.children[0].data.split(" ")[1]; // Number of the channel extracted from the HTML
-		const channelPage = getChannelPageLink(channel);
+  return new Promise(async (resolve, reject) => {
+    const channelNo = channel.children[0].data.split(" ")[1]; // Number of the channel extracted from the HTML
+    const channelPage = getChannelPageLink(channel);
 
-		try {
-			const acestream = await getAcestreamLink(channelPage);
-			const tinyurl = await tinyfy(acestream);
-			resolve([{
-				channel: channelNo, 
-				url: {
-					acestream,
-					tinyurl
-				}
-			}]);
-		} catch (ex) {
-			resolve(undefined);
-		}
-	});
-	
+    try {
+      const acestream = await getAcestreamLink(channelPage);
+      const tinyurl = await tinyfy(acestream);
+      resolve([{
+        channel: channelNo,
+        url: {
+          acestream,
+          tinyurl
+        }
+      }]);
+    } catch (ex) {
+      resolve(undefined);
+    }
+  });
+
 }
 
 /**
@@ -60,9 +61,9 @@ async function getChannelsAcestreamLinks(channel) {
  * @param {Object} channel Channel object to extract the channel URL
  * @returns {String} The URL of the channel
  */
-function getChannelPageLink(channel){
-	const url = channel.attribs.href;
-	return url.match(regex.url) ? url : urlArenaVision + url;
+function getChannelPageLink(channel) {
+  const url = channel.attribs.href;
+  return url.match(regex.url) ? url : urlArenaVision + url;
 }
 
 /**
@@ -72,24 +73,25 @@ function getChannelPageLink(channel){
 function getAcestreamLink(url) {
   return new Promise((resolve, reject) => {
     fetch(url, fetchOpts)
-      .then(response => {
-				let res = "";
+      .then(res => res.text())
+      .then(data => {
+        let res = "";
 
-				let match = regex.usual.exec(response.data);
-				if(match != null && match[1] !== undefined && match[1] !== ""){
-					res = match[1]
-				} else {
-					match = regex.alt.exec(response.data);
-					if(match != null && match[1] !== undefined && match[1] !== ""){
-						res = match[1]
-					}
-				}
+        let match = regex.usual.exec(data);
+        if (match != null && match[1] !== undefined && match[1] !== "") {
+          res = match[1]
+        } else {
+          match = regex.alt.exec(data);
+          if (match != null && match[1] !== undefined && match[1] !== "") {
+            res = match[1]
+          }
+        }
 
         resolve(`acestream://${res}`);
       })
       .catch(error => {
-				reject(error)
-			});
+        reject(error)
+      });
   });
 }
 
@@ -98,7 +100,7 @@ function getAcestreamLink(url) {
  * @param {String} url URL to tinyfy
  * @returns The same URL but with tinyfy
  */
-function tinyfy(url){
+function tinyfy(url) {
   return new Promise(function (resolve, reject) {
     shorten(url, (res) => {
       resolve(res);

@@ -1,6 +1,6 @@
 const load = require("cheerio").load;
 const fetch = require("node-fetch")
-const {filter} = require("lodash")
+const { filter } = require("lodash")
 const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
 
 /**
@@ -10,19 +10,20 @@ function getGuide() {
   return new Promise(async (resolve, reject) => {
     const url = await getGuideLink();
 
-    getch(url, fetchOpts)
-      .then(response => {
-        const $ = load(response.data);
+    fetch(url, fetchOpts)
+      .then(res => res.text())
+      .then(data => {
+        const $ = load(data);
         const eventsInfo = [];
 
-        $("table").find("tr").each(function(i, elem) {
+        $("table").find("tr").each(function (i, elem) {
           const info = $(this).find("td");
           const data = getData(info);
 
-          if(data.channels && data.channels.length > 0){
-            eventsInfo.push(getData(info));  
+          if (data.channels && data.channels.length > 0) {
+            eventsInfo.push(getData(info));
           }
-          
+
         });
         resolve(eventsInfo);
       })
@@ -38,8 +39,9 @@ function getGuide() {
 function getGuideLink() {
   return new Promise((resolve, reject) => {
     fetch(urlArenaVision, fetchOpts)
-      .then(response => {
-        const $ = load(response.data);
+      .then(res => res.text())
+      .then(res => {
+        const $ = load(res);
         const linkObj = $(selectors.guide);
 
         // Sometimes the link is relative. If so, fill it with the base url
@@ -74,10 +76,10 @@ function getData(info) {
  * @param {Object} data Data to be cleaned
  */
 function cleanData(data) {
-  if(data){
+  if (data) {
     const text = [...data.children]
-    .filter(innerText => innerText.data)
-    .reduce((prev, next) => prev + " " + next.data, "")
+      .filter(innerText => innerText.data)
+      .reduce((prev, next) => prev + " " + next.data, "")
 
     return text.replace("-", " - ").replace("\n", "").replace("\r", "").trim();
   } else {
@@ -90,16 +92,16 @@ function cleanData(data) {
  * @param {Object} dataChannel Object with the cell where the channels info are stored
  */
 function cleanChannels(dataChannel) {
-  if(!dataChannel) 
+  if (!dataChannel)
     return []
 
   let channels = [];
 
   filter(dataChannel.children, text => {
-      return text.data && text.data.trim() != "" && text.data.includes("[");
-    })
+    return text.data && text.data.trim() != "" && text.data.includes("[");
+  })
     .forEach(text => {
-      const str = text.data.replace("\r","").replace("\n", "").trim();
+      const str = text.data.replace("\r", "").replace("\n", "").trim();
       const rip = str.split("[");
       const lang = rip[1].replace("]", "");
       const channelsRip = rip[0].trim().split("-");

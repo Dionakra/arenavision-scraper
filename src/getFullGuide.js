@@ -12,27 +12,27 @@ async function getFullGuide() {
         const channelInfo = getAcestreamURL(channel.channel, channels)
         let res = []
 
-        if(channelInfo){
+        if (channelInfo) {
           const acestreamURL = channelInfo.url.acestream
-        
-          if(!eventUrls.includes(acestreamURL)){
+
+          if (!eventUrls.includes(acestreamURL)) {
             eventUrls = eventUrls.concat(acestreamURL)
             channel.url = channelInfo.url
             res = channel
           }
         }
-        
+
         return res
       })
       event.channels = eventChannels
       return event
     })
-  
+
     resolve(fullGuide)
   })
 }
 
-function getAcestreamURL(channelNo, channels){
+function getAcestreamURL(channelNo, channels) {
   return channels.filter(channel => channel.channel == channelNo)[0]
 }
 
