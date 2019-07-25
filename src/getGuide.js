@@ -1,36 +1,102 @@
 const load = require("cheerio").load;
 const fetch = require("node-fetch")
-const { filter } = require("lodash")
+const { filter, flatten } = require("lodash")
+
+const util = require('util')
+const fs = require('fs')
+const streamPipeline = util.promisify(require('stream').pipeline)
+const Tesseract = require('tesseract.js');
+
 const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
+const IMG_NAME = `guide_${new Date().getTime()}.png`
+
+getGuide()
 
 /**
  * Obtains the guide at Arenavision.ru available at the moment in an JSON friendly format
  */
 function getGuide() {
   return new Promise(async (resolve, reject) => {
+    // Obtaining the Guide URL (it changes every time)
     const url = await getGuideLink();
 
-    fetch(url, fetchOpts)
-      .then(res => res.text())
-      .then(data => {
-        const $ = load(data);
-        const eventsInfo = [];
+    // Obtaining the HTML from the Guide
+    const res = await fetch(url, fetchOpts);
+    const data = await res.text();
 
-        $("table").find("tr").each(function (i, elem) {
-          const info = $(this).find("td");
-          const data = getData(info);
+    // First we try to obtain data from text (which is faster and easier)
+    let guide = await getGuideFromText(data)
 
-          if (data.channels && data.channels.length > 0) {
-            eventsInfo.push(getData(info));
-          }
+    // If we couldn't extract data from the HTML, let´s try with the image
+    if (guide === undefined || guide.length === 0) {
+      guide = await getGuideFromImage(data)
+    }
 
-        });
-        resolve(eventsInfo);
-      })
-      .catch(error => reject(error));
+    resolve(guide)
   });
 };
 
+function getGuideFromImage(data) {
+  let res = []
+
+  return new Promise(async (resolve, reject) => {
+    // Obtain the image (if there is one)
+    const $ = load(data)
+    const imgUrl = $(selectors.guideImg).attr('src')
+
+    const response = await fetch(`${urlArenaVision}${imgUrl}`)
+    if (!response.ok) throw new Error(`unexpected response ${response.statusText}`)
+    await streamPipeline(response.body, fs.createWriteStream(IMG_NAME))
+
+    // Once the image is saved, pass it to Tesseract
+    const { TesseractWorker } = Tesseract;
+    const worker = new TesseractWorker();
+    const { text } = await worker.recognize('./placeholder.png')
+    worker.terminate();
+
+    res = text.split('\n')
+      .filter(l => l.includes(":") && l.includes(","))
+      .map(l => {
+        const m = regex.guide.exec(l.trim())
+
+        if (m != null) {
+          return {
+            day: m[1].trim(),
+            time: m[2].trim(),
+            sport: m[3].trim(),
+            competition: m[4].trim(),
+            event: m[5].trim(),
+            channels: cleanChannelsFromImage(m[6])
+          }
+        } else {
+          return null
+        }
+      }).filter(l => l != null)
+
+      console.log(JSON.stringify(res))
+
+    resolve(res)
+  })
+}
+
+
+function getGuideFromText(data) {
+  return new Promise((resolve, reject) => {
+    const $ = load(data);
+    const eventsInfo = [];
+
+    $("table").find("tr").each(function (i, elem) {
+      const info = $(this).find("td");
+      const data = getData(info);
+
+      if (data.channels && data.channels.length > 0) {
+        eventsInfo.push(getData(info));
+      }
+
+    });
+    resolve(eventsInfo);
+  })
+}
 
 /**
  * Obtains the URL to the Guide page. 
@@ -112,6 +178,28 @@ function cleanChannels(dataChannel) {
     })
 
   return channels;
+}
+
+/**
+ * Obtains each channel and language for each event
+ * @param {Object} dataChannel Object with the cell where the channels info are stored
+ */
+function cleanChannelsFromImage(text) {
+  const channels = text.replace("[[", "[")
+    .replace("]]", "]")
+    .split("]")
+    .filter(w => w.trim().length > 0)
+    .map(entry => {
+      const [channels, lang] = entry.split("[")
+      return channels.split("-").map(channel => {
+        return {
+          channel: channel.trim(),
+          lang: lang.trim()
+        }
+      })
+    })
+
+    return flatten(channels)
 }
 
 exports.default = getGuide;

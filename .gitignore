@@ -13,3 +13,6 @@ package-lock.json
 *.sln
 
 .nyc_output
+
+*.traineddata
+*.png

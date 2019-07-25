@@ -4,11 +4,13 @@ module.exports = {
     channels: "ul.menu > li.expanded > ul.menu > li > a",
     events: "tr",
     guide: "ul.menu > li[class=leaf] > a",
+    guideImg: "#main img"
   },
   regex: {
     url: /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
     usual: /acestream:\/\/(.*?)\"/,
-    alt: /\.m3u8\?id=(.*?)"/
+    alt: /\.m3u8\?id=(.*?)"/,
+    guide: /(\d{2}\/\d{2}\/\d{4}) (\d{2}:\d{2} CEST) (.*?) (.*?):(.*?),(.*)/gm
   },
   prop: {
     day: 0,
