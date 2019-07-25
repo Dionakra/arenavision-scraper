@@ -51,7 +51,7 @@ function getGuideFromImage(data) {
     // Once the image is saved, pass it to Tesseract
     const { TesseractWorker } = Tesseract;
     const worker = new TesseractWorker();
-    const { text } = await worker.recognize('./placeholder.png')
+    const { text } = await worker.recognize(IMG_NAME)
     worker.terminate();
 
     res = text.split('\n')
