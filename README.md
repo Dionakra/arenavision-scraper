@@ -3,7 +3,7 @@
 # Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
 Scrapes Arenavision in order to get the events displayed on the guide and obtaining the acestream links.
 
-__Version 1.0.27 changelog_
+__Version 1.0.27 changelog__
 Arenavision just changed the way they display the events. Now all the information is printed inside an image, so now is much harder to extract information from it. I am ussing TesseractJS to extract the information, but it requires some power. With some tests, on a regular i5 laptop it takes about one minute to get the full guide. In a basic DigitialOcean's droplet, more than five minutes.
 
 __Version 1.0.25 changelog__
