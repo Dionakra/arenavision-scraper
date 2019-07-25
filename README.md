@@ -1,7 +1,10 @@
 <p align="center"><a href="https://nodei.co/npm/arenavision-scraper/"><img src="https://nodei.co/npm/arenavision-scraper.png"></a></p>
 
-# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper) [![Coverage Status](https://coveralls.io/repos/github/Dionakra/arenavision-scraper/badge.svg?branch=master)](https://coveralls.io/github/Dionakra/arenavision-scraper?branch=master)
-Scrapes Arenavision.ru in order to get the events displayed on the guide and obtaining the acestream links.
+# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
+Scrapes Arenavision in order to get the events displayed on the guide and obtaining the acestream links.
+
+__Version 1.0.27 changelog_
+Arenavision just changed the way they display the events. Now all the information is printed inside an image, so now is much harder to extract information from it. I am ussing TesseractJS to extract the information, but it requires some power. With some tests, on a regular i5 laptop it takes about one minute to get the full guide. In a basic DigitialOcean's droplet, more than five minutes.
 
 __Version 1.0.25 changelog__
 Arenavision has put a Cloudflare authentication wall to reject petitions for non-web-users. I couldn't fix this with `axios`, so I moved to `node-fetch` because replicating the HTTP request with the `fetch` built in Chrome command it just works, so its easier for me to get just the same command to Node and copy and paste the options to get it working.

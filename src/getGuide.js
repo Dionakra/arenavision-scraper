@@ -10,8 +10,6 @@ const Tesseract = require('tesseract.js');
 const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
 const IMG_NAME = `guide_${new Date().getTime()}.png`
 
-getGuide()
-
 /**
  * Obtains the guide at Arenavision.ru available at the moment in an JSON friendly format
  */
@@ -51,7 +49,7 @@ function getGuideFromImage(data) {
     // Once the image is saved, pass it to Tesseract
     const { TesseractWorker } = Tesseract;
     const worker = new TesseractWorker();
-    const { text } = await worker.recognize(IMG_NAME)
+    const { text } = await worker.recognize(IMG_NAME).progress((p) => { console.log('progress', p); })
     worker.terminate();
 
     res = text.split('\n')
@@ -72,9 +70,6 @@ function getGuideFromImage(data) {
           return null
         }
       }).filter(l => l != null)
-
-      console.log(JSON.stringify(res))
-
     resolve(res)
   })
 }
