@@ -2,8 +2,8 @@ const getGuide = require('./getGuide').default
 const getChannels = require('./getChannels').default
 const flatMap = require('lodash/flatMap')
 
-async function getFullGuide() {
-  const [guide, channels] = await Promise.all([getGuide(), getChannels()]);
+async function getFullGuide(enableLog = false) {
+  const [guide, channels] = await Promise.all([getGuide(enableLog), getChannels(enableLog)]);
 
   return new Promise((resolve, reject) => {
     const fullGuide = guide.map(event => {

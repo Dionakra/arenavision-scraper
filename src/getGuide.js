@@ -10,15 +10,20 @@ const Tesseract = require('tesseract.js');
 const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
 const IMG_NAME = `guide_${new Date().getTime()}.png`
 
+const Log = require('./log').default
+let LOGGER = new Log(false)
+
 /**
  * Obtains the guide at Arenavision.ru available at the moment in an JSON friendly format
  */
-function getGuide() {
+function getGuide(enableLog = false) {
+  LOGGER = new Log(enableLog, 'GET_GUIDE')
   return new Promise(async (resolve, reject) => {
-    // Obtaining the Guide URL (it changes every time)
+    LOGGER.info(`Obtaining events URL from ${urlArenaVision}`)
     const url = await getGuideLink();
+    LOGGER.info(`Events page: ${url}`)
 
-    // Obtaining the HTML from the Guide
+    LOGGER.info('Obtaining data from the HTML...')
     const res = await fetch(url, fetchOpts);
     const data = await res.text();
 
@@ -27,8 +32,11 @@ function getGuide() {
 
     // If we couldn't extract data from the HTML, let´s try with the image
     if (guide === undefined || guide.length === 0) {
+      LOGGER.info("Couldn't extract info from HTML. Trying extracting the info from the IMG...")
       guide = await getGuideFromImage(data)
     }
+
+    LOGGER.info(`Information found: ${JSON.stringify(guide)}`)
 
     resolve(guide)
   });
@@ -38,24 +46,30 @@ function getGuideFromImage(data) {
   let res = []
 
   return new Promise(async (resolve, reject) => {
-    // Obtain the image (if there is one)
+    LOGGER.info("Obtaining image from HTML...")
     const $ = load(data)
     const imgUrl = $(selectors.guideImg).attr('src')
+    LOGGER.info(`Image found at ${urlArenaVision}${imgUrl}`)
 
+    LOGGER.info(`Saving image as ${IMG_NAME}...`)
     const response = await fetch(`${urlArenaVision}${imgUrl}`)
     if (!response.ok) throw new Error(`unexpected response ${response.statusText}`)
     await streamPipeline(response.body, fs.createWriteStream(IMG_NAME))
 
-    // Once the image is saved, pass it to Tesseract
+    LOGGER.info("Extracting information from image....")
     const { TesseractWorker } = Tesseract;
     const worker = new TesseractWorker();
-    const { text } = await worker.recognize(IMG_NAME).progress((p) => { console.log('progress', p); })
+    const { text } = await worker.recognize(IMG_NAME).progress(p => LOGGER.info(JSON.stringify(p)))
     worker.terminate();
+    LOGGER.info(`Extracted text from image: \r\n ${text}`)
 
+    LOGGER.info("Filtering text with enough information for parsing...")
     res = text.split('\n')
-      .filter(l => l.includes(":") && l.includes(","))
+      .filter(l => l.split(":").length >= 3 && l.includes(","))
       .map(l => {
-        const m = regex.guide.exec(l.trim())
+        LOGGER.info(`Extracting info from ${l}`)
+        const rg = regex.guide
+        const m = rg.exec(l.trim())
 
         if (m != null) {
           return {
@@ -67,6 +81,7 @@ function getGuideFromImage(data) {
             channels: cleanChannelsFromImage(m[6])
           }
         } else {
+          LOGGER.info(`Regex didn't match this line.`)
           return null
         }
       }).filter(l => l != null)
@@ -99,6 +114,7 @@ function getGuideFromText(data) {
  */
 function getGuideLink() {
   return new Promise((resolve, reject) => {
+    
     fetch(urlArenaVision, fetchOpts)
       .then(res => res.text())
       .then(res => {

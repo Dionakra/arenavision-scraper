@@ -2,18 +2,26 @@ const load = require("cheerio").load;
 const fetch = require("node-fetch");
 const shorten = require('tinyurl').shorten;
 const { urlArenaVision, selectors, fetchOpts, regex } = require("./params");
+const Log = require('./log').default
+
+let LOGGER = new Log(false)
 
 /**
  * Obtains all the channels and their acestream links
  */
-function getChannels() {
+function getChannels(enableLog = false) {
+  LOGGER = new Log(enableLog, 'GET_CHANNELS')
+
   return new Promise((resolve, reject) => {
+    LOGGER.info(`Querying ${urlArenaVision} for getting the HTML...`)
     fetch(urlArenaVision, fetchOpts)
       .then(res => res.text())
       .then(async data => {
+        LOGGER.info('Extracting the URLs where the channel info is stored...')
         const $ = load(data);
         const channels = $(selectors.channels);
 
+        LOGGER.info('Extracting Acestream links from channels URLs')
         let channelList = []
         for (let i = 0; i < channels.length; i++) {
           const channelInfo = await getChannelsAcestreamLinks(channels[i]);
@@ -22,6 +30,7 @@ function getChannels() {
             channelList = channelList.concat(channelInfo)
           }
         }
+        LOGGER.info(`Extraction finished successfully: ${channelList}`)
         resolve(channelList);
       })
       .catch(error => reject(error));
@@ -35,11 +44,14 @@ function getChannels() {
  */
 async function getChannelsAcestreamLinks(channel) {
   return new Promise(async (resolve, reject) => {
-    const channelNo = channel.children[0].data.split(" ")[1]; // Number of the channel extracted from the HTML
+    const channelNo = channel.children[0].data.split(" ")[1];
     const channelPage = getChannelPageLink(channel);
 
     try {
+      LOGGER.info(`Obtaining Arenavision URL for channel ${channelNo} at ${channelPage}`)
       const acestream = await getAcestreamLink(channelPage);
+
+      LOGGER.info(`Acestream URL for channel ${channelNo}: ${acestream}. Tinyfying...`)
       const tinyurl = await tinyfy(acestream);
       resolve([{
         channel: channelNo,
