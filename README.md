@@ -27,7 +27,7 @@ $ npm install
 ```
 
 ## Available methods (v 1.0.15+)
-### getGuide()
+### getGuide(enableLog = false)
 It scrapes the *guide* page of Arenavision and returns a Promise with a JSON containing every event on this page.
 
 #### Example
@@ -70,7 +70,7 @@ getGuide().then(console.log);
 ```
 
 
-### getChannels()
+### getChannels(enableLog = false)
 It recovers the channels and its acestream links. That is done because these links are not static, they change sometimes, so you may have to recover these links. It also provides the tinyurl for Acestream.
 
 #### Example
@@ -99,7 +99,7 @@ getChannels().then(console.log);
 ]
 ```
 
-### getFullGuide()
+### getFullGuide(enableLog = false)
 Mix the previous methods in one just to get all the information with just one method.
 
 #### Example
