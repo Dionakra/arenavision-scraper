@@ -63,7 +63,7 @@ function getGuideFromImage(data) {
             time: m[2].trim(),
             sport: m[3].trim(),
             competition: m[4].trim(),
-            event: m[5].trim(),
+            event: m[5].trim().replace("-", " - "),
             channels: cleanChannelsFromImage(m[6])
           }
         } else {
