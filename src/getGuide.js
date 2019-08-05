@@ -114,10 +114,12 @@ function getGuideFromText(data) {
  */
 function getGuideLink() {
   return new Promise((resolve, reject) => {
+    let html = undefined;
     
     fetch(urlArenaVision, fetchOpts)
       .then(res => res.text())
       .then(res => {
+        html = res;
         const $ = load(res);
         const linkObj = $(selectors.guide);
 
@@ -127,7 +129,10 @@ function getGuideLink() {
 
         resolve(url);
       })
-      .catch(error => reject(error));
+      .catch(error => {
+        LOGGER.info(`GET_GUIDE_LINK ERROR ${html}`);
+        reject(error)
+      });
   });
 }
 
