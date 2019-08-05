@@ -20,5 +20,5 @@ module.exports = {
     event: 4,
     channels: 5
   },
-  fetchOpts: { "credentials": "include", "headers": { "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3", "accept-language": "es", "cache-control": "no-cache", "pragma": "no-cache", "upgrade-insecure-requests": "1" }, "referrerPolicy": "no-referrer-when-downgrade", "body": null, "method": "GET" }
+  fetchOpts: { "credentials": "include", "headers": { "cookie": "","accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3", "accept-language": "es", "cache-control": "no-cache", "pragma": "no-cache", "upgrade-insecure-requests": "1" }, "referrerPolicy": "no-referrer-when-downgrade", "body": null, "method": "GET" }
 };
