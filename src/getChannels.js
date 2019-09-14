@@ -15,7 +15,12 @@ function getChannels(enableLog = false) {
   return new Promise((resolve, reject) => {
     LOGGER.info(`Querying ${urlArenaVision} for getting the HTML...`)
     fetch(urlArenaVision, fetchOpts)
-      .then(res => res.text())
+      .then(res => {
+        // Set the referer based on the response. If not set, it will redirect to homepage
+        fetchOpts.headers.referer = res.url
+        
+        return res.text()
+      })
       .then(async data => {
         LOGGER.info('Extracting the URLs where the channel info is stored...')
         const $ = load(data);

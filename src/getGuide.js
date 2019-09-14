@@ -117,7 +117,12 @@ function getGuideLink() {
     let html = undefined;
     
     fetch(urlArenaVision, fetchOpts)
-      .then(res => res.text())
+      .then(res => {
+        // Set the referer based on the response. If not set, it will redirect to homepage
+        fetchOpts.headers.referer = res.url
+        
+        return res.text()
+      })
       .then(res => {
         html = res;
         const $ = load(res);
