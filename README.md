@@ -3,6 +3,9 @@
 # Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
 Scrapes Arenavision in order to get the events displayed on the guide and obtaining the acestream links.
 
+__Version 1.0.33 changelog__
+Now Arenavision went back to the old fashioned way of displaying data in a HTML table rather in a tiny image, so the image-processing path is no longer required. That's not the only reason to drop that implementation from the library. TesseractJS was causing some problems when I was trying to deploy a Firebase Function using this library. Now with everything related to that implementation removed I have successfully deployed a Firebase Function using this library, so everything is fine.
+
 __Version 1.0.30 changelog__
 As now the information extraction is a bit difficult, you have the option of logging everything that happens just in case you need to trace what the f*ck happens when extracting the information. Also it will give you the ability to see what's going on in this long running process.
 
