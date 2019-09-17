@@ -79,8 +79,15 @@ async function getChannelsAcestreamLinks(channel) {
  * @returns {String} The URL of the channel
  */
 function getChannelPageLink(channel) {
-  const url = channel.attribs.href;
-  return url.match(regex.url) ? url : urlArenaVision + url;
+  let url = channel.attribs.href;
+  if(!url.match(regex.url)){
+    if(url.startsWith("/")){
+      url = urlArenaVision + url.substr(1)
+    } else {
+      url = urlArenaVision + url
+    }
+  }
+  return url;
 }
 
 /**

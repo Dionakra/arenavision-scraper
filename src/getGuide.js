@@ -129,10 +129,17 @@ function getGuideLink() {
         const linkObj = $(selectors.guide);
 
         // Sometimes the link is relative. If so, fill it with the base url
-        const link = linkObj[0].attribs.href;
-        const url = link.match(regex.url) ? link : urlArenaVision + link;
+        let link = linkObj[0].attribs.href;
+        //const url = link.match(regex.url) ? link : urlArenaVision + link;
+        if(!link.match(regex.url)){
+          if(link.startsWith("/")){
+            link = urlArenaVision + link.substr(1)
+          } else {
+            link = urlArenaVision + link
+          }
+        }
 
-        resolve(url);
+        resolve(link);
       })
       .catch(error => {
         LOGGER.info(`GET_GUIDE_LINK ERROR ${html}`);
