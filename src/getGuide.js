@@ -1,14 +1,8 @@
 const load = require("cheerio").load;
 const fetch = require("node-fetch")
-const { filter, flatten } = require("lodash")
-
-const util = require('util')
-const fs = require('fs')
-const streamPipeline = util.promisify(require('stream').pipeline)
-const Tesseract = require('tesseract.js');
+const filter = require("lodash/filter")
 
 const { urlArenaVision, selectors, prop, fetchOpts, regex } = require("./params");
-const IMG_NAME = `guide_${new Date().getTime()}.png`
 
 const Log = require('./log').default
 let LOGGER = new Log(false)
@@ -27,68 +21,12 @@ function getGuide(enableLog = false) {
     const res = await fetch(url, fetchOpts);
     const data = await res.text();
 
-    // First we try to obtain data from text (which is faster and easier)
-    let guide = await getGuideFromText(data)
-
-    // If we couldn't extract data from the HTML, let´s try with the image
-    if (guide === undefined || guide.length === 0) {
-      LOGGER.info("Couldn't extract info from HTML. Trying extracting the info from the IMG...")
-      guide = await getGuideFromImage(data)
-    }
-
+    const guide = await getGuideFromText(data)
     LOGGER.info(`Information found: ${JSON.stringify(guide)}`)
 
     resolve(guide)
   });
 };
-
-function getGuideFromImage(data) {
-  let res = []
-
-  return new Promise(async (resolve, reject) => {
-    LOGGER.info("Obtaining image from HTML...")
-    const $ = load(data)
-    const imgUrl = $(selectors.guideImg).attr('src')
-    LOGGER.info(`Image found at ${urlArenaVision}${imgUrl}`)
-
-    LOGGER.info(`Saving image as ${IMG_NAME}...`)
-    const response = await fetch(`${urlArenaVision}${imgUrl}`)
-    if (!response.ok) throw new Error(`unexpected response ${response.statusText}`)
-    await streamPipeline(response.body, fs.createWriteStream(IMG_NAME))
-
-    LOGGER.info("Extracting information from image....")
-    const { TesseractWorker } = Tesseract;
-    const worker = new TesseractWorker();
-    const { text } = await worker.recognize(IMG_NAME).progress(p => LOGGER.info(JSON.stringify(p)))
-    worker.terminate();
-    LOGGER.info(`Extracted text from image: \r\n ${text}`)
-
-    LOGGER.info("Filtering text with enough information for parsing...")
-    res = text.split('\n')
-      .filter(l => l.split(":").length >= 3 && l.includes(","))
-      .map(l => {
-        LOGGER.info(`Extracting info from ${l}`)
-        const rg = regex.guide
-        const m = rg.exec(l.trim())
-
-        if (m != null) {
-          return {
-            day: m[1].trim(),
-            time: m[2].trim(),
-            sport: m[3].trim(),
-            competition: m[4].trim(),
-            event: m[5].trim().replace("-", " - "),
-            channels: cleanChannelsFromImage(m[6])
-          }
-        } else {
-          LOGGER.info(`Regex didn't match this line.`)
-          return null
-        }
-      }).filter(l => l != null)
-    resolve(res)
-  })
-}
-
 
 function getGuideFromText(data) {
   return new Promise((resolve, reject) => {
@@ -206,28 +144,6 @@ function cleanChannels(dataChannel) {
     })
 
   return channels;
-}
-
-/**
- * Obtains each channel and language for each event
- * @param {Object} dataChannel Object with the cell where the channels info are stored
- */
-function cleanChannelsFromImage(text) {
-  const channels = text.replace("[[", "[")
-    .replace("]]", "]")
-    .split("]")
-    .filter(w => w.trim().length > 0)
-    .map(entry => {
-      const [channels, lang] = entry.split("[")
-      return channels.split("-").map(channel => {
-        return {
-          channel: channel.trim(),
-          lang: lang.trim()
-        }
-      })
-    })
-
-    return flatten(channels)
 }
 
 exports.default = getGuide;
