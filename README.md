@@ -1,24 +1,7 @@
-<p align="center"><a href="https://nodei.co/npm/arenavision-scraper/"><img src="https://nodei.co/npm/arenavision-scraper.png"></a></p>
+# Arenavision Scraper _(DEPRECATED)_
+_This library has been deprecated. Please refer to [this issue](https://github.com/Dionakra/arenavision-scraper/issues/6) if you want to know why. It has been fun, but it is over._
+Node library for obtaining information related to sports events and acestream links to watch them stored at Arenavision.
 
-# Arenavision Scraper [![Build Status](https://travis-ci.org/Dionakra/arenavision-scraper.svg?branch=master)](https://travis-ci.org/Dionakra/arenavision-scraper)
-Scrapes Arenavision in order to get the events displayed on the guide and obtaining the acestream links.
-
-__Version 1.0.33 changelog__
-Now Arenavision went back to the old fashioned way of displaying data in a HTML table rather in a tiny image, so the image-processing path is no longer required. That's not the only reason to drop that implementation from the library. TesseractJS was causing some problems when I was trying to deploy a Firebase Function using this library. Now with everything related to that implementation removed I have successfully deployed a Firebase Function using this library, so everything is fine.
-
-__Version 1.0.30 changelog__
-As now the information extraction is a bit difficult, you have the option of logging everything that happens just in case you need to trace what the f*ck happens when extracting the information. Also it will give you the ability to see what's going on in this long running process.
-
-__Version 1.0.27 changelog__
-Arenavision just changed the way they display the events. Now all the information is printed inside an image, so now is much harder to extract information from it. I am ussing TesseractJS to extract the information, but it requires some power. With some tests, on a regular i5 laptop it takes about one minute to get the full guide. In a basic DigitialOcean's droplet, more than five minutes.
-
-__Version 1.0.25 changelog__
-Arenavision has put a Cloudflare authentication wall to reject petitions for non-web-users. I couldn't fix this with `axios`, so I moved to `node-fetch` because replicating the HTTP request with the `fetch` built in Chrome command it just works, so its easier for me to get just the same command to Node and copy and paste the options to get it working.
-
-__Version 1.0.24 changelog__
-Version 1.0.24 points to www.arenavision.biz, and version 1.0.23 points to www.arenavision.us. If one of them doesn't work, try the other one.
-
-__Version 1.0.15 changelog__ I have changed the entire object returned by the methods, added one more that encapsulates the other two, added CI with Travis, tests and coverage results. The returned object is slightly different but much better. Therefore, the README has the 1.0.15 docs. To see previous docs, just go through the README git history.
 
 ## Installation (NPM)
 ``` bash
